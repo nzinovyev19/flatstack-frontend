@@ -1,5 +1,5 @@
 <template lang="pug">
-.wrapper
+#app(v-if="staticWords && basicStaticWords")
   TheHeader
   main.main
     .container
@@ -7,15 +7,28 @@
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex';
 import TheHeader from '@/components/TheHeader';
 import OrderForm from '@/components/OrderForm';
 export default {
-  name: 'app',
   components: {
     TheHeader,
     OrderForm
+  },
+  computed: {
+    ...mapState('translations', {
+      staticWords: state => state.staticWords,
+      basicStaticWords: state => state.basicStaticWords
+    })
+  },
+  async created() {
+    await this.fetchStaticWords();
+    await this.fetchBasicStaticWords();
+  },
+  methods: {
+    ...mapActions('translations', ['fetchStaticWords', 'fetchBasicStaticWords'])
   }
-}
+};
 </script>
 
 <style lang="scss">
