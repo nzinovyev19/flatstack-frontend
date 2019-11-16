@@ -9,18 +9,23 @@
       .header__column
         .header__cart
           span.header__cart-text cart
+          span.header__cart-length(v-if="selectedProducts.length !== 0") {{ selectedProducts.length }}
           img.header__cart-icon(:src="Cart")
 </template>
 
 <script>
 import Logo from '@/assets/img/icons/logo.svg';
 import Cart from '@/assets/img/icons/cart.svg';
+import { mapState } from 'vuex';
 export default {
   data() {
     return {
       Logo,
       Cart
     };
+  },
+  computed: {
+    ...mapState(['selectedProducts'])
   }
 };
 </script>
@@ -48,12 +53,29 @@ export default {
     }
   }
   &__cart {
+    position: relative;
     display: flex;
     align-items: flex-end;
     &-text {
       margin-right: 5px;
       font-size: 15px;
       color: #C90EA5;
+    }
+    &-length {
+      position: absolute;
+      top: -6px;
+      right: -5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 15px;
+      height: 15px;
+      border: 1px solid #FFFFFF;
+      border-radius: 50%;
+      font-size: 9px;
+      line-height: 10px;
+      color: #ffffff;
+      background: #C90EA5;
     }
   }
 }

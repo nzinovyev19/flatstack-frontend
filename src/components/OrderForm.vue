@@ -69,6 +69,7 @@
                   :value="localized('value.continue')"
                 )
   .order-form__column.order-form__column_dark
+    OrderFormCart
 </template>
 
 <script>
@@ -76,11 +77,13 @@ import { required } from 'vuelidate/lib/validators';
 import { mapGetters } from 'vuex';
 import BaseInput from '@/components/BaseInput';
 import BaseButton from '@/components/BaseButton';
+import OrderFormCart from '@/components/OrderFormCart';
 import OrderFormBreadcrumbs from '@/components/OrderFormBreadcrumbs';
 export default {
   components: {
     BaseInput,
     BaseButton,
+    OrderFormCart,
     OrderFormBreadcrumbs
   },
   data() {
@@ -139,8 +142,8 @@ export default {
     background: #FFFFFF;
     &_dark {
       width: 40%;
-      padding: 20px 5px;
-      background: #E6E9F0;
+      padding: 20px 12px;
+      background: #F3F4F7;
     }
   }
   &__list {

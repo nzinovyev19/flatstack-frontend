@@ -9,9 +9,33 @@ export default new Vuex.Store({
     translations
   },
   state: {
-    // normalized: {
+    lang: 'en',
 
-    // },
-    lang: 'en'
+    selectedProducts: [
+      {
+        id: 'asdaseptascript',
+        photo: '',
+        name: 'The Chelsea Boot',
+        descr: 'Black',
+        quantity: '1',
+        price: '235',
+      },
+      {
+        id: 'asdaseptascriptg',
+        photo: '',
+        name: 'The Twill Snap Backpack',
+        descr: 'Reverse Denim + Brown leather',
+        quantity: '1',
+        price: '205',
+      },
+      {
+        id: 'asdaseptascriptgg',
+        photo: '',
+        name: 'The Twill Zip Tote',
+        descr: 'Reverse Denim + Black leather',
+        quantity: '1',
+        price: '95',
+      }
+    ]
   }
 });
