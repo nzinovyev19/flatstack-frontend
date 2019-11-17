@@ -1,25 +1,42 @@
 <template lang="pug">
 .base-input
   .base-input__label
+    BaseInputMask(
+      v-if="mask"
+      @input="$emit('input', $event)"
+      :mask="mask"
+      :type="type"
+      :class="inputClasses"
+      :value="modelValue"
+      :masked="masked"
+      :disabled="disabled"
+      :placeholder="placeholder"
+      class="base-input__input"
+    )
+    BaseInputSelect(
+      v-else-if="type === 'select'"
+      @input="$emit('input', $event)"
+      :type="type"
+      :label="label"
+      :value="modelValue"
+      :reduce="reduce"
+      :isError="isError"
+      :options="options"
+      :disabled="disabled"
+      :placeholder="placeholder"
+    )
     input.base-input__input(
+      v-else
       @input="$emit('input', $event.target.value)"
       :type="type"
       :value="modelValue"
       :placeholder="placeholder"
-      :class="{'base-input__input_error': isError}"
+      :class="inputClasses"
     )
     BaseInputErrors(
       v-if="isError"
       :errorsObject="errorsObject"
     )
-    .base-input__prompts(
-      v-if="prompts && prompts.length !== 0"
-    )
-      .base-input__prompts-child(
-        v-for="prompt in prompts"
-        :key="prompt.place_id"
-        @click="$emit('select-address', prompt)"
-      ) {{ prompt.formatted_address }}
   .base-input__descr(
     v-if="this.$slots.descr"
     :class="{ 'base-input__descr_justify': modifier === 'descrJustify' }"
@@ -30,13 +47,15 @@
 </template>
 
 <script>
+import BaseInputSelect from '@/components/BaseInputSelect';
 import BaseInputErrors from '@/components/BaseInputErrors';
 export default {
   components: {
     BaseInputErrors,
+    BaseInputSelect
   },
   model: {
-    prop: 'modelValue'
+    prop: 'modelValue',
   },
   props: {
     id: String,
@@ -47,10 +66,13 @@ export default {
       type: Boolean,
       default: true
     },
+    label: String,
     height: Number,
     accept: String,
     format: String,
+    reduce: Function,
     prompts: Array,
+    options: Array,
     masked: Boolean,
     maxSize: Number,
     preview: String,
@@ -72,6 +94,14 @@ export default {
       default: false
     },
     modelValue: [Array, File, String, Number, Object, Boolean]
+  },
+  computed: {
+    inputClasses() {
+      return {
+        'base-input__input_disabled': this.disabled,
+        'base-input__input_error': this.isError
+      };
+    }
   }
 };
 </script>
@@ -133,13 +163,6 @@ export default {
         border: 2px solid #F2F2F2;
       }
     }
-    &_worktime {
-      padding: 0;
-      text-align: center;
-      font-size: 14px;
-      line-height: 20px;
-      color: #000000;
-    }
   }
   &__prompts {
     width: 100%;
@@ -197,6 +220,16 @@ export default {
     top: 50%;
     right: 10px;
     transform: translateY(-50%);
+  }
+  &__btn {
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-50%);
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
   }
 }
 </style>
