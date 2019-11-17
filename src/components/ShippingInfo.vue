@@ -1,74 +1,76 @@
 <template lang="pug">
-form.shipping-info__form(@submit.prevent="submit")
-  .shipping-info__title Shipping Info
-  ul.shipping-info__list
-    li.shipping-info__child
-      .shipping-info__child-title Recipient
-      .shipping-info__child-inputs
-        .shipping-info__child-input
-          BaseInput(
-            v-model.trim="$v.formValues.fullname.$model"
-            :isError="$v.formValues.fullname.$error"
-            :errorsObject="$v.formValues.fullname"
-            :placeholder="localized('placeholder.fullname')"
-          )
-        .shipping-info__child-group
-          .shipping-info__child-input.shipping-info__child-input_phone
+.shipping-info
+  form.shipping-info__form(@submit.prevent="submit")
+    .shipping-info__title Shipping Info
+    ul.shipping-info__list
+      li.shipping-info__child
+        .shipping-info__child-title Recipient
+        .shipping-info__child-inputs
+          .shipping-info__child-input
             BaseInput(
-              v-model.trim="$v.formValues.phone.$model"
-              :mask="'+7 (###) ###-##-##'"
-              :isError="$v.formValues.phone.$error"
-              :errorsObject="$v.formValues.phone"
-              :placeholder="localized('placeholder.phone')"
+              v-model.trim="$v.formValues.fullname.$model"
+              :isError="$v.formValues.fullname.$error"
+              :errorsObject="$v.formValues.fullname"
+              :placeholder="localized('placeholder.fullname')"
             )
-              template(#descr) {{ localized('label.phone.use') }}
-    li.shipping-info__child
-      .shipping-info__child-title Address
-      .shipping-info__child-inputs
-        .shipping-info__child-input
-          BaseInput(
-            v-model.trim="$v.formValues.streetAddress.$model"
-            :isError="$v.formValues.streetAddress.$error"
-            :errorsObject="$v.formValues.streetAddress"
-            :placeholder="localized('placeholder.streetAddress')"
-          )
-        .shipping-info__child-input
-          BaseInput(
-            v-model.trim="formValues.fullAddress"
-            :placeholder="localized('placeholder.address.clarification')"
-          )
-        .shipping-info__child-input.shipping-info__child-input_city
-          BaseInput(
-            v-model.trim="$v.formValues.city.$model"
-            :isError="$v.formValues.city.$error"
-            :errorsObject="$v.formValues.city"
-            :placeholder="localized('placeholder.city')"
-          )
-          button.shipping-info__child-btn.shipping-info__child-btn_city(@click="searchCityNameByLatLng")
-        .shipping-info__child-group
-          .shipping-info__child-input.shipping-info__child-input_country
+          .shipping-info__child-group
+            .shipping-info__child-input.shipping-info__child-input_phone
+              BaseInput(
+                v-model.trim="$v.formValues.phone.$model"
+                :mask="'+7 (###) ###-##-##'"
+                :masked="true"
+                :isError="$v.formValues.phone.$error"
+                :errorsObject="$v.formValues.phone"
+                :placeholder="localized('placeholder.phone')"
+              )
+                template(#descr) {{ localized('label.phone.use') }}
+      li.shipping-info__child
+        .shipping-info__child-title Address
+        .shipping-info__child-inputs
+          .shipping-info__child-input
             BaseInput(
-              v-model.trim="$v.formValues.country.$model"
-              :isError="$v.formValues.country.$error"
-              :errorsObject="$v.formValues.country"
-              type="select"
-              :options="countries"
-              :label="'name'"
-              :reduce="country => country.name"
+              v-model.trim="$v.formValues.streetAddress.$model"
+              :isError="$v.formValues.streetAddress.$error"
+              :errorsObject="$v.formValues.streetAddress"
+              :placeholder="localized('placeholder.streetAddress')"
             )
-          .shipping-info__child-input.shipping-info__child-input_zip
+          .shipping-info__child-input
             BaseInput(
-              v-model.trim="$v.formValues.zip.$model"
-              :isError="$v.formValues.zip.$error"
-              :errorsObject="$v.formValues.zip"
-              :placeholder="localized('placeholder.zip')"
+              v-model.trim="formValues.fullAddress"
+              :placeholder="localized('placeholder.address.clarification')"
             )
-        .shipping-info__child-group
-          .shipping-info__child-btn
-            BaseButton(
-              type="submit"
-              :value="localized('value.continue')"
+          .shipping-info__child-input.shipping-info__child-input_city
+            BaseInput(
+              v-model.trim="$v.formValues.city.$model"
+              :isError="$v.formValues.city.$error"
+              :errorsObject="$v.formValues.city"
+              :placeholder="localized('placeholder.city')"
             )
+            button.shipping-info__child-btn.shipping-info__child-btn_city(@click="searchCityNameByLatLng")
+          .shipping-info__child-group
+            .shipping-info__child-input.shipping-info__child-input_country
+              BaseInput(
+                v-model.trim="$v.formValues.country.$model"
+                :isError="$v.formValues.country.$error"
+                :errorsObject="$v.formValues.country"
+                type="select"
+                :options="countries"
+                :label="'name'"
+                :reduce="country => country.name"
+              )
+            .shipping-info__child-input.shipping-info__child-input_zip
+              BaseInput(
+                v-model.trim="$v.formValues.zip.$model"
+                :isError="$v.formValues.zip.$error"
+                :errorsObject="$v.formValues.zip"
+                :placeholder="localized('placeholder.zip')"
+              )
+          .shipping-info__child-group
+            .shipping-info__child-btn
+              BaseButton(
+                type="submit"
+                :value="localized('value.continue')"
+              )
 </template>
 
 <script>
@@ -101,7 +103,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('translations', ['localized']),
+    ...mapGetters('translations', ['localized'])
   },
   async created() {
     await Promise.allSettled([
@@ -110,10 +112,18 @@ export default {
     ]);
   },
   methods: {
+    filteredFormValues(unusebleProps) {
+      const result = Object.assign({}, this.formValues);
+      for (const prop of unusebleProps) {
+        delete result[prop];
+      }
+      return result;
+    },
     submit() {
       this.$v.$touch();
       if (!this.$v.$invalid) {
         //TODO request
+        this.$store.commit('setEnteredData', this.filteredFormValues(['phone']));
         this.$router.push('billing');
       }
     },
