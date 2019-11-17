@@ -1,54 +1,52 @@
 <template lang="pug">
-.shipping-info
-  form.shipping-info__form(@submit.prevent="submit")
-    .shipping-info__title Shipping Info
-    ul.shipping-info__list
-      li.shipping-info__child
-        .shipping-info__child-title Recipient
-        .shipping-info__child-inputs
-          .shipping-info__child-input
+.billing-info
+  form.billing-info__form(@submit.prevent="submit")
+    .billing-info__top
+      h2.billing-info__title Billing Information
+      a.billing-info__autocomplete(@click="autocomplete") Same as shipping
+    ul.billing-info__list
+      li.billing-info__child
+        h3.billing-info__child-title Billing Contact
+        .billing-info__child-inputs
+          .billing-info__child-input
             BaseInput(
               v-model.trim="$v.formValues.fullname.$model"
               :isError="$v.formValues.fullname.$error"
               :errorsObject="$v.formValues.fullname"
               :placeholder="localized('placeholder.fullname')"
             )
-          .shipping-info__child-group
-            .shipping-info__child-input.shipping-info__child-input_phone
-              BaseInput(
-                v-model.trim="$v.formValues.phone.$model"
-                :mask="'+7 (###) ###-##-##'"
-                :masked="true"
-                :isError="$v.formValues.phone.$error"
-                :errorsObject="$v.formValues.phone"
-                :placeholder="localized('placeholder.phone')"
-              )
-                template(#descr) {{ localized('label.phone.use') }}
-      li.shipping-info__child
-        .shipping-info__child-title Address
-        .shipping-info__child-inputs
-          .shipping-info__child-input
+          .billing-info__child-input
+            BaseInput(
+              v-model.trim="$v.formValues.email.$model"
+              :isError="$v.formValues.email.$error"
+              :errorsObject="$v.formValues.email"
+              :placeholder="localized('placeholder.email')"
+            )
+      li.billing-info__child
+        h3.billing-info__child-title Billing Address
+        .billing-info__child-inputs
+          .billing-info__child-input
             BaseInput(
               v-model.trim="$v.formValues.streetAddress.$model"
               :isError="$v.formValues.streetAddress.$error"
               :errorsObject="$v.formValues.streetAddress"
               :placeholder="localized('placeholder.streetAddress')"
             )
-          .shipping-info__child-input
+          .billing-info__child-input
             BaseInput(
               v-model.trim="formValues.fullAddress"
               :placeholder="localized('placeholder.address.clarification')"
             )
-          .shipping-info__child-input.shipping-info__child-input_city
+          .billing-info__child-input.billing-info__child-input_city
             BaseInput(
               v-model.trim="$v.formValues.city.$model"
               :isError="$v.formValues.city.$error"
               :errorsObject="$v.formValues.city"
               :placeholder="localized('placeholder.city')"
             )
-            button.shipping-info__child-btn.shipping-info__child-btn_city(@click="searchCityNameByLatLng")
-          .shipping-info__child-group
-            .shipping-info__child-input.shipping-info__child-input_country
+            button.billing-info__child-btn.billing-info__child-btn_city(@click="searchCityNameByLatLng")
+          .billing-info__child-group
+            .billing-info__child-input.billing-info__child-input_country
               BaseInput(
                 v-model.trim="$v.formValues.country.$model"
                 :isError="$v.formValues.country.$error"
@@ -58,15 +56,15 @@
                 :label="'name'"
                 :reduce="country => country.name"
               )
-            .shipping-info__child-input.shipping-info__child-input_zip
+            .billing-info__child-input.billing-info__child-input_zip
               BaseInput(
                 v-model.trim="$v.formValues.zip.$model"
                 :isError="$v.formValues.zip.$error"
                 :errorsObject="$v.formValues.zip"
                 :placeholder="localized('placeholder.zip')"
               )
-          .shipping-info__child-group
-            .shipping-info__child-btn
+          .billing-info__child-group
+            .billing-info__child-btn
               BaseButton(
                 type="submit"
                 :value="localized('value.continue')"
@@ -74,9 +72,9 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import { required, numeric } from 'vuelidate/lib/validators';
+import { mapGetters, mapState } from 'vuex';
 import { getCurrentPosition } from '@/helpers';
+import { required, numeric, email } from 'vuelidate/lib/validators';
 import BaseInput from '@/components/BaseInput';
 import BaseButton from '@/components/BaseButton';
 import BaseInputSelect from '@/components/BaseInputSelect';
@@ -94,7 +92,7 @@ export default {
       formValues: {
         zip: '',
         city: '',
-        phone: '',
+        email: '',
         country: '',
         fullname: '',
         fullAddress: '',
@@ -103,7 +101,8 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('translations', ['localized'])
+    ...mapGetters('translations', ['localized']),
+    ...mapState(['enteredData'])
   },
   async created() {
     await Promise.allSettled([
@@ -112,20 +111,15 @@ export default {
     ]);
   },
   methods: {
-    filteredFormValues(unusebleProps) {
-      const result = Object.assign({}, this.formValues);
-      for (const prop of unusebleProps) {
-        delete result[prop];
-      }
-      return result;
-    },
     submit() {
       this.$v.$touch();
       if (!this.$v.$invalid) {
         //TODO request
-        this.$store.commit('setEnteredData', this.filteredFormValues(['phone']));
-        this.$router.push('billing');
+        this.$router.push('payment');
       }
+    },
+    autocomplete() {
+      Object.assign(this.formValues, this.enteredData);
     },
     async fetchCounties() {
       try {
@@ -169,8 +163,9 @@ export default {
       fullname: {
         required
       },
-      phone: {
-        required
+      email: {
+        required,
+        email
       },
       streetAddress: {
         required
@@ -191,8 +186,20 @@ export default {
 </script>
 
 <style lang="scss">
-.shipping-info {
+.billing-info {
+  &__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  &__autocomplete {
+    font-size: 12px;
+    line-height: 14px;
+    text-decoration: underline;
+    cursor: pointer;
+  }
   &__title {
+    margin: 0;
     font-size: 26px;
     line-height: 31px;
   }
@@ -208,6 +215,7 @@ export default {
       margin-top: 30px;
     }
     &-title {
+      margin: 0;
       font-size: 16px;
       line-height: 18px;
     }

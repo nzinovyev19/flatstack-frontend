@@ -1,10 +1,12 @@
 {
   "error.field.required": "Field is required",
   "error.field.numeric": "Numeric value",
+  "error.field.email": "Invalid email",
 
   "placeholder.zip": "ZIP",
   "placeholder.city": "City",
   "placeholder.phone": "Daytime Phone",
+  "placeholder.email": "Email Address",
   "placeholder.country": "Country",
   "placeholder.fullname": "Full Name",
   "placeholder.streetAddress": "Street Address",

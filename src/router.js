@@ -5,6 +5,7 @@ import OrderFormPage from '@/views/OrderFormPage';
 
 import ShippingInfo from '@/components/ShippingInfo';
 import BillingInfo from '@/components/BillingInfo';
+import Payment from '@/components/Payment';
 
 Vue.use(Router);
 
@@ -21,6 +22,10 @@ const router = new Router({
         {
           path: 'billing',
           component: BillingInfo
+        },
+        {
+          path: 'payment',
+          component: Payment
         }
       ]
     }
