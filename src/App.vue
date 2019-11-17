@@ -3,17 +3,15 @@
   TheHeader
   main.main
     .container
-      OrderForm
+      RouterView
 </template>
 
 <script>
 import { mapActions, mapState } from 'vuex';
 import TheHeader from '@/components/TheHeader';
-import OrderForm from '@/components/OrderForm';
 export default {
   components: {
-    TheHeader,
-    OrderForm
+    TheHeader
   },
   computed: {
     ...mapState('translations', {
