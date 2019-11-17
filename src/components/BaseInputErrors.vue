@@ -7,6 +7,9 @@
     .base-input-error__child(
       v-if="errorsObject.numeric === false"
     ) {{ localized('error.field.numeric') }}
+    .base-input-error__child(
+      v-if="errorsObject.email === false"
+    ) {{ localized('error.field.email') }}
 </template>
 
 <script>
