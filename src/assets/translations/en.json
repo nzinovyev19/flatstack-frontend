@@ -1,5 +1,6 @@
 {
   "error.field.required": "Field is required",
+  "error.field.numeric": "Numeric value",
 
   "placeholder.zip": "ZIP",
   "placeholder.city": "City",
