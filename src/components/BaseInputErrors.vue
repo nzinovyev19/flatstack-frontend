@@ -4,6 +4,9 @@
     .base-input-error__child(
       v-if="errorsObject.required === false"
     ) {{ localized('error.field.required') }}
+    .base-input-error__child(
+      v-if="errorsObject.numeric === false"
+    ) {{ localized('error.field.numeric') }}
 </template>
 
 <script>
