@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import translations from './modules/translations.js';
+import createPersistedState from 'vuex-persistedstate';
 
 Vue.use(Vuex);
 
@@ -11,6 +12,7 @@ export default new Vuex.Store({
   state: {
     lang: 'en',
 
+    enteredData: null,
     selectedProducts: [
       {
         id: 'asdaseptascript',
@@ -37,5 +39,15 @@ export default new Vuex.Store({
         price: '95',
       }
     ]
+  },
+  plugins: [
+    createPersistedState({
+      paths: ['enteredData']
+    })
+  ],
+  mutations: {
+    setEnteredData: (state, data) => {
+      state.enteredData = data;
+    }
   }
 });
