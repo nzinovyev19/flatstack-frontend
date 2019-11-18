@@ -1,8 +1,19 @@
 <template lang="pug">
 .base-input
   .base-input__label
+    BaseInputCards(
+      v-if="type === 'cards'"
+      @input="$emit('input', $event)"
+      :mask="mask"
+      :type="type"
+      :value="modelValue"
+      :masked="masked"
+      :isError="isError"
+      :disabled="disabled"
+      :placeholder="placeholder"
+    )
     BaseInputMask(
-      v-if="mask"
+      v-else-if="mask"
       @input="$emit('input', $event)"
       :mask="mask"
       :type="type"
@@ -47,10 +58,12 @@
 </template>
 
 <script>
+import BaseInputCards from '@/components/BaseInputCards';
 import BaseInputSelect from '@/components/BaseInputSelect';
 import BaseInputErrors from '@/components/BaseInputErrors';
 export default {
   components: {
+    BaseInputCards,
     BaseInputErrors,
     BaseInputSelect
   },
