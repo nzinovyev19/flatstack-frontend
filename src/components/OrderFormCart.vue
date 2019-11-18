@@ -85,6 +85,9 @@ export default {
   &__top {
     width: 100%;
   }
+  &__bottom {
+    margin-top: 20px;
+  }
   &__title {
     margin: 0;
     font-size: 16px;
