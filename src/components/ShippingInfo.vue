@@ -4,7 +4,7 @@
     .shipping-info__title Shipping Info
     ul.shipping-info__list
       li.shipping-info__child
-        .shipping-info__child-title Recipient
+        h3.shipping-info__child-title Recipient
         .shipping-info__child-inputs
           .shipping-info__child-input
             BaseInput(
@@ -25,7 +25,7 @@
               )
                 template(#descr) {{ localized('label.phone.use') }}
       li.shipping-info__child
-        .shipping-info__child-title Address
+        h3.shipping-info__child-title Address
         .shipping-info__child-inputs
           .shipping-info__child-input
             BaseInput(
@@ -106,10 +106,8 @@ export default {
     ...mapGetters('translations', ['localized'])
   },
   async created() {
-    await Promise.allSettled([
-      this.fetchCounties(),
-      this.searchCityNameByLatLng()
-    ]);
+    await this.fetchCounties();
+    await this.searchCityNameByLatLng();
   },
   methods: {
     filteredFormValues(unusebleProps) {
@@ -208,6 +206,8 @@ export default {
       margin-top: 30px;
     }
     &-title {
+      font-family: 'HelveticaNeueUlrtaLight';
+      margin: 0;
       font-size: 16px;
       line-height: 18px;
     }
