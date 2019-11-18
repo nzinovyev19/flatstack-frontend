@@ -6,6 +6,7 @@ import OrderFormPage from '@/views/OrderFormPage';
 import ShippingInfo from '@/components/ShippingInfo';
 import BillingInfo from '@/components/BillingInfo';
 import Payment from '@/components/Payment';
+import Check from '@/components/Check';
 
 Vue.use(Router);
 
@@ -26,6 +27,10 @@ const router = new Router({
         {
           path: 'payment',
           component: Payment
+        },
+        {
+          path: 'check',
+          component: Check
         }
       ]
     }
