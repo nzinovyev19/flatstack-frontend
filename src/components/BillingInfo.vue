@@ -105,16 +105,15 @@ export default {
     ...mapState(['enteredData'])
   },
   async created() {
-    await Promise.allSettled([
-      this.fetchCounties(),
-      this.searchCityNameByLatLng()
-    ]);
+    await this.fetchCounties();
+    await this.searchCityNameByLatLng();
   },
   methods: {
     submit() {
       this.$v.$touch();
       if (!this.$v.$invalid) {
         //TODO request
+        this.$store.commit('setEnteredData', Object.assign(this.enteredData, { email: this.formValues.email }));
         this.$router.push('payment');
       }
     },
