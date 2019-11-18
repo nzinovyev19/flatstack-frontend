@@ -1,8 +1,10 @@
 <template lang="pug">
 .order-form
   .order-form__column
-    //- .order-form__breadcrumbs
-      OrderFormBreadcrumbs
+    .order-form__breadcrumbs
+      OrderFormStatusBar(
+        :links="links"
+      )
     .order-form__info
       RouterView
   .order-form__column.order-form__column_dark
@@ -11,11 +13,20 @@
 
 <script>
 import OrderFormCart from '@/components/OrderFormCart';
-import OrderFormBreadcrumbs from '@/components/OrderFormBreadcrumbs';
+import OrderFormStatusBar from '@/components/OrderFormStatusBar';
 export default {
   components: {
     OrderFormCart,
-    OrderFormBreadcrumbs
+    OrderFormStatusBar
+  },
+  data() {
+    return {
+      links: {
+        Shipping: '/',
+        Billing: 'billing',
+        Payment: 'payment'
+      }
+    };
   }
 };
 </script>
@@ -35,6 +46,9 @@ export default {
       padding: 20px 12px;
       background: #F3F4F7;
     }
+  }
+  &__info {
+    margin-top: 20px;
   }
 }
 </style>
